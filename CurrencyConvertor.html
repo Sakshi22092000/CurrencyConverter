@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Currency Converter</title>
+        <style type="text/css">
+                .container{
+                        height: 100vh;
+                        width: 100%;
+                        position: fixed;
+                        top: 0px;
+                        left: 0px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                }
+                .currency-con{
+                        height: 430px;
+                        width: 300px;
+                        box-shadow: 0px 0px 20px grey;
+                        border-radius: 30px;
+                        padding: 20px;
+                }
+                #amount{
+                        width: 80%;
+                        height: 30px;
+                        font-size: 20px;
+                        border: none;
+                        outline: none;
+                        text-align: center;
+                        border-bottom: 4px solid grey;
+                        margin-top: 20px;
+                        margin-left: 10%;
+                }
+                select{
+                        height: 30px;
+                        width: 40%;
+                        margin-left: 20px;
+                }
+                button[type="button"]
+                {
+                        height: 40px;
+                        width: 90%;
+                        margin-left: 5%;
+                        border: none;
+                        outline: none;
+                        background-color: orangered;
+                        border-radius: 10px;
+                        color: white;
+                        font-size: 20px;
+                        font-weight: bolder;
+                }
+                #op{
+                        text-align: center;
+                        margin-bottom: 30px;
+                }
+        </style>
+</head>
+<body>
+        <div class="container">
+                <div class="currency-con">
+                        <h1 align="center" style="font-size: 20px">CURRENCY CONVERTOR</h1>
+                        <center>
+                                <img height="100px" src="https://tse3.mm.bing.net/th?id=OIP.Lx4_hsdNATUpCSJZwCKiwAHaHa&pid=Api&P=0&h=180">
+                        </center>
+
+                        <div style="margin-top: 20px;">
+                                <form>
+                                        <label style="font-weight: bolder;">Amount</label>
+                                        <input type="text" id="amount" placeholder="00">
+                                        <br>
+                                        <br>
+                                        <select id="from-currency">
+                                                
+                                        </select>
+
+                                        <select id="to-currency"></select>
+                                        <br>
+                                        <br>
+                                        <button type="button" onclick="convertCurrency()">CONVERT</button>
+                                        <h1 id="op"></h1>
+                                </form>
+                                
+                        </div>
+                        
+                </div>
+                
+        </div>
+        <script type="text/javascript">
+                let api = "https://v6.exchangerate-api.com/v6/392cf992792b0f5645b4163a/latest/USD";
+                let formCurrencyDropdown = document.getElementById("from-currency");
+                let toCurrencyDropdown = document.getElementById("to-currency");
+                let op = document.getElementById("op");
+                op.innerHTML = "output";
+                let currencyArr = ["AED","EUR","INR","LKR","PKR","USD"];
+
+                currencyArr.forEach((curency)=>{
+                        let option = document.createElement("option");
+                        option.value = curency;
+                        option.innerHTML = curency;
+                        formCurrencyDropdown.appendChild(option);
+                })
+
+                currencyArr.forEach((curency)=>{
+                        let option = document.createElement("option");
+                        option.value = curency;
+                        option.innerHTML=curency;
+                        toCurrencyDropdown.appendChild(option);
+                })
+
+                formCurrencyDropdown.value="INR";
+                toCurrencyDropdown.value="USD";
+
+                function convertCurrency(){
+                        fetch(api)
+                        .then(response=>response.json())
+                        .then(data=>{
+                                let fromCurr = document.getElementById("from-currency").value;
+                                let toCurr = document.getElementById("to-currency").value;
+                let fromCurreRate =  data.conversion_rates[fromCurr];
+                let toCurreRate = data.conversion_rates[toCurr];
+                let amount = document.getElementById("amount").value;
+                if(amount!= " "){
+                        let convertedAmount = (amount/fromCurreRate)*toCurreRate;
+                        op.innerHTML = `${amount} ${fromCurr} = ${convertedAmount.toFixed(2)} ${toCurr}`
+                }
+
+                else{
+                        alert("Enter an amount");
+                }
+                
+                        })
+                }
+        </script>
+
+</body>
+</html>
